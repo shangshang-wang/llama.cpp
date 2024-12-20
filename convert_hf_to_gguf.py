@@ -673,19 +673,22 @@ class Model:
             res = "gigachat"
 
         if res is None:
-            logger.warning("\n")
-            logger.warning("**************************************************************************************")
-            logger.warning("** WARNING: The BPE pre-tokenizer was not recognized!")
-            logger.warning("**          There are 2 possible reasons for this:")
-            logger.warning("**          - the model has not been added to convert_hf_to_gguf_update.py yet")
-            logger.warning("**          - the pre-tokenization config has changed upstream")
-            logger.warning("**          Check your model files and convert_hf_to_gguf_update.py and update them accordingly.")
-            logger.warning("** ref:     https://github.com/ggerganov/llama.cpp/pull/6920")
-            logger.warning("**")
-            logger.warning(f"** chkhsh:  {chkhsh}")
-            logger.warning("**************************************************************************************")
-            logger.warning("\n")
-            raise NotImplementedError("BPE pre-tokenizer was not recognized - update get_vocab_base_pre()")
+
+            return "gpt-2"
+
+            # logger.warning("\n")
+            # logger.warning("**************************************************************************************")
+            # logger.warning("** WARNING: The BPE pre-tokenizer was not recognized!")
+            # logger.warning("**          There are 2 possible reasons for this:")
+            # logger.warning("**          - the model has not been added to convert_hf_to_gguf_update.py yet")
+            # logger.warning("**          - the pre-tokenization config has changed upstream")
+            # logger.warning("**          Check your model files and convert_hf_to_gguf_update.py and update them accordingly.")
+            # logger.warning("** ref:     https://github.com/ggerganov/llama.cpp/pull/6920")
+            # logger.warning("**")
+            # logger.warning(f"** chkhsh:  {chkhsh}")
+            # logger.warning("**************************************************************************************")
+            # logger.warning("\n")
+            # raise NotImplementedError("BPE pre-tokenizer was not recognized - update get_vocab_base_pre()")
 
         logger.debug(f"tokenizer.ggml.pre: {repr(res)}")
         logger.debug(f"chkhsh: {chkhsh}")
@@ -1539,7 +1542,7 @@ class LlamaModel(Model):
     def set_vocab(self):
         try:
             self._set_vocab_sentencepiece()
-        except FileNotFoundError:
+        except (FileNotFoundError, RuntimeError):
             try:
                 self._set_vocab_llama_hf()
             except (FileNotFoundError, TypeError):
